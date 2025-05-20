@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O FIM</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 20px;
+      margin-top: 20px;
+      background: black;
+      color: red;
+      border: 2px solid red;
+    }
+
+    #video-fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 999;
+      display: none;
+    }
+
+    #matrix {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+      color: lime;
+      font-size: 14px;
+      padding: 10px;
+      white-space: pre-wrap;
+      overflow-y: scroll;
+    }
+
+    #acesso-liberado {
+      color: lime;
+      font-size: 32px;
+      text-align: center;
+      margin: 20px;
+      font-family: 'Courier New', monospace;
+    }
+
+    #youtube-player {
+      display: none;
+      width: 80vw;
+      height: 45vw;
+      max-width: 800px;
+      max-height: 450px;
+      margin: auto;
+      position: relative;
+      z-index: 1000;
+    }
+
+    #next-password {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #next-password input {
+      padding: 10px;
+      font-size: 20px;
+      background: black;
+      color: lime;
+      border: 2px solid lime;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>Quem é ele, o guardião da informação, que tudo observa, em silêncio agudo?</h1>
+    <p>Qual o "nome real" dele?</p>
+    <input type="text" id="senha" placeholder="Digite a senha...">
+  </div>
+
+  <video id="video-fullscreen" src="HH.mp4" type="video/mp4"></video>
+
+  <div id="matrix">
+    <div id="acesso-liberado">ACESSO LIBERADO</div>
+    <div id="youtube-player">
+      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/VFZtzloiOV0?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div id="next-password">
+      <input type="text" placeholder="Próxima senha...">
+    </div>
+  </div>
+
+  <script>
+    const senhaInput = document.getElementById("senha");
+    const container = document.getElementById("container");
+    const video = document.getElementById("video-fullscreen");
+    const matrix = document.getElementById("matrix");
+    const youtube = document.getElementById("youtube-player");
+    const nextPassword = document.getElementById("next-password");
+
+    senhaInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const senha = senhaInput.value.trim().toLowerCase();
+        if (senha === "444") {
+          container.style.display = "none";
+          video.style.display = "block";
+          video.play();
+
+          video.onended = function () {
+            video.style.display = "none";
+            matrix.style.display = "block";
+            youtube.style.display = "block";
+            nextPassword.style.display = "block";
+            gerarCodigo();
+          };
+        } else {
+          senhaInput.style.border = "2px solid orange";
+        }
+      }
+    });
+
+    function gerarCodigo() {
+      const caracteres = "ELE ESPERA PELA RESOLUÇÃO DE SEU MISTÉRIO";
+      let codigo = "";
+      for (let i = 0; i < 5000; i++) {
+        codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length)) + " ";
+        if (i % 80 === 0) codigo += "\n";
+      }
+      document.getElementById("matrix").appendChild(document.createTextNode(codigo));
+    }
+  </script>
+</body>
+</html>
