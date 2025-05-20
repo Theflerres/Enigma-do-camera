@@ -90,6 +90,19 @@
       color: lime;
       border: 2px solid lime;
     }
+
+    #mensagem-erro {
+      margin-top: 10px;
+      color: orange;
+      font-size: 18px;
+    }
+
+    #timer {
+      color: red;
+      font-size: 18px;
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -108,6 +121,8 @@
     </div>
     <div id="next-password">
       <input type="text" placeholder="Próxima senha...">
+      <div id="mensagem-erro">instabilidade no servidor por favor contatar com 444</div>
+      <div id="timer"></div>
     </div>
   </div>
 
@@ -118,6 +133,7 @@
     const matrix = document.getElementById("matrix");
     const youtube = document.getElementById("youtube-player");
     const nextPassword = document.getElementById("next-password");
+    const timerElement = document.getElementById("timer");
 
     senhaInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
@@ -133,6 +149,7 @@
             youtube.style.display = "block";
             nextPassword.style.display = "block";
             gerarCodigo();
+            iniciarContagemRegressiva(24 * 60 * 60); // 24h em segundos
           };
         } else {
           senhaInput.style.border = "2px solid orange";
@@ -148,6 +165,25 @@
         if (i % 80 === 0) codigo += "\n";
       }
       document.getElementById("matrix").appendChild(document.createTextNode(codigo));
+    }
+
+    function iniciarContagemRegressiva(segundos) {
+      function formatar(seg) {
+        const h = String(Math.floor(seg / 3600)).padStart(2, '0');
+        const m = String(Math.floor((seg % 3600) / 60)).padStart(2, '0');
+        const s = String(seg % 60).padStart(2, '0');
+        return `${h}:${m}:${s}`;
+      }
+
+      const intervalo = setInterval(() => {
+        if (segundos <= 0) {
+          clearInterval(intervalo);
+          timerElement.innerText = "Tempo expirado.";
+        } else {
+          timerElement.innerText = `Tempo restante: ${formatar(segundos)}`;
+          segundos--;
+        }
+      }, 1000);
     }
   </script>
 </body>
