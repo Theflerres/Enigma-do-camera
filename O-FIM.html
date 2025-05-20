@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>O FIM</title>
   <style>
     body {
@@ -92,15 +92,16 @@
     }
 
     #mensagem-erro {
-      margin-top: 10px;
-      color: orange;
-      font-size: 18px;
+      color: red;
+      margin-top: 20px;
+      font-size: 20px;
+      text-align: center;
     }
 
     #timer {
-      color: red;
-      font-size: 18px;
       margin-top: 10px;
+      font-size: 18px;
+      color: orange;
       text-align: center;
     }
   </style>
@@ -121,9 +122,9 @@
     </div>
     <div id="next-password">
       <input type="text" placeholder="Próxima senha...">
-      <div id="mensagem-erro">instabilidade no servidor por favor contatar com 444</div>
-      <div id="timer"></div>
     </div>
+    <div id="mensagem-erro">instabilidade no servidor por favor contatar com 444</div>
+    <div id="timer"></div>
   </div>
 
   <script>
@@ -133,27 +134,22 @@
     const matrix = document.getElementById("matrix");
     const youtube = document.getElementById("youtube-player");
     const nextPassword = document.getElementById("next-password");
-    const timerElement = document.getElementById("timer");
+    const timerEl = document.getElementById("timer");
 
     senhaInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
-        const senha = senhaInput.value.trim().toLowerCase();
-        if (senha === "444") {
-          container.style.display = "none";
-          video.style.display = "block";
-          video.play();
+        container.style.display = "none";
+        video.style.display = "block";
+        video.play();
 
-          video.onended = function () {
-            video.style.display = "none";
-            matrix.style.display = "block";
-            youtube.style.display = "block";
-            nextPassword.style.display = "block";
-            gerarCodigo();
-            iniciarContagemRegressiva(24 * 60 * 60); // 24h em segundos
-          };
-        } else {
-          senhaInput.style.border = "2px solid orange";
-        }
+        video.onended = function () {
+          video.style.display = "none";
+          matrix.style.display = "block";
+          youtube.style.display = "block";
+          nextPassword.style.display = "block";
+          gerarCodigo();
+          iniciarTimer(24 * 60 * 60); // 24 horas em segundos
+        };
       }
     });
 
@@ -167,23 +163,20 @@
       document.getElementById("matrix").appendChild(document.createTextNode(codigo));
     }
 
-    function iniciarContagemRegressiva(segundos) {
-      function formatar(seg) {
-        const h = String(Math.floor(seg / 3600)).padStart(2, '0');
-        const m = String(Math.floor((seg % 3600) / 60)).padStart(2, '0');
-        const s = String(seg % 60).padStart(2, '0');
-        return `${h}:${m}:${s}`;
-      }
-
-      const intervalo = setInterval(() => {
-        if (segundos <= 0) {
-          clearInterval(intervalo);
-          timerElement.innerText = "Tempo expirado.";
-        } else {
-          timerElement.innerText = `Tempo restante: ${formatar(segundos)}`;
+    function iniciarTimer(segundos) {
+      function atualizar() {
+        const h = String(Math.floor(segundos / 3600)).padStart(2, '0');
+        const m = String(Math.floor((segundos % 3600) / 60)).padStart(2, '0');
+        const s = String(segundos % 60).padStart(2, '0');
+        timerEl.textContent = `Tempo restante: ${h}:${m}:${s}`;
+        if (segundos > 0) {
           segundos--;
+          setTimeout(atualizar, 1000);
+        } else {
+          timerEl.textContent = "Tempo esgotado.";
         }
-      }, 1000);
+      }
+      atualizar();
     }
   </script>
 </body>
