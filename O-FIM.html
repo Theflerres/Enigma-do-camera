@@ -66,42 +66,18 @@
       font-family: 'Courier New', monospace;
     }
 
-    #youtube-player {
-      display: none;
-      width: 80vw;
-      height: 45vw;
-      max-width: 800px;
-      max-height: 450px;
-      margin: auto;
-      position: relative;
-      z-index: 1000;
-    }
-
-    #next-password {
-      display: none;
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    #next-password input {
-      padding: 10px;
-      font-size: 20px;
-      background: black;
-      color: lime;
-      border: 2px solid lime;
-    }
-
-    #mensagem-erro {
+    #mensagem-ameaca {
       color: red;
-      margin-top: 20px;
-      font-size: 20px;
+      font-size: 24px;
       text-align: center;
+      margin-top: 30px;
+      font-family: 'Courier New', monospace;
     }
 
     #timer {
       margin-top: 10px;
-      font-size: 18px;
-      color: orange;
+      font-size: 22px;
+      color: red;
       text-align: center;
     }
   </style>
@@ -117,13 +93,7 @@
 
   <div id="matrix">
     <div id="acesso-liberado">ACESSO LIBERADO</div>
-    <div id="youtube-player">
-      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/VFZtzloiOV0?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
-    </div>
-    <div id="next-password">
-      <input type="text" placeholder="Próxima senha...">
-    </div>
-    <div id="mensagem-erro">instabilidade no servidor por favor contatar com 444</div>
+    <div id="mensagem-ameaca">AMEAÇA DETECTADA<br>SISTEMA DE DEFESAS ATIVADO<br>POR FAVOR CONTINUE DEPOIS DE 24H</div>
     <div id="timer"></div>
   </div>
 
@@ -132,24 +102,25 @@
     const container = document.getElementById("container");
     const video = document.getElementById("video-fullscreen");
     const matrix = document.getElementById("matrix");
-    const youtube = document.getElementById("youtube-player");
-    const nextPassword = document.getElementById("next-password");
     const timerEl = document.getElementById("timer");
 
     senhaInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
-        container.style.display = "none";
-        video.style.display = "block";
-        video.play();
+        const senha = senhaInput.value.trim().toLowerCase();
+        if (senha === "hunter") {
+          container.style.display = "none";
+          video.style.display = "block";
+          video.play();
 
-        video.onended = function () {
-          video.style.display = "none";
-          matrix.style.display = "block";
-          youtube.style.display = "block";
-          nextPassword.style.display = "block";
-          gerarCodigo();
-          iniciarTimer(24 * 60 * 60); // 24 horas em segundos
-        };
+          video.onended = function () {
+            video.style.display = "none";
+            matrix.style.display = "block";
+            gerarCodigo();
+            iniciarTimer(24 * 60 * 60); // 24h em segundos
+          };
+        } else {
+          senhaInput.style.border = "2px solid orange";
+        }
       }
     });
 
