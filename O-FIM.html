@@ -14,13 +14,18 @@
       overflow: hidden;
     }
 
-    #container, #next-phase {
-      display: flex;
+    #container, #fase2, #fase3 {
+      display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       text-align: center;
+      padding: 20px;
+    }
+
+    #container {
+      display: flex;
     }
 
     input[type="text"] {
@@ -32,103 +37,78 @@
       border: 2px solid red;
     }
 
-    #video-fullscreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: 999;
-      display: none;
+    #fase2 input {
+      color: lime;
+      border-color: lime;
     }
 
-    #matrix {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: black;
-      color: lime;
-      font-size: 14px;
-      padding: 10px;
-      white-space: pre-wrap;
-      overflow-y: scroll;
+    iframe {
+      width: 80vw;
+      height: 45vw;
+      max-width: 800px;
+      max-height: 450px;
+      border: none;
+      margin-top: 20px;
     }
 
-    #acesso-liberado {
+    #aviso, #timer, #painel {
       color: lime;
-      font-size: 32px;
-      text-align: center;
-      margin: 20px;
       font-family: 'Courier New', monospace;
-    }
-
-    #next-phase {
-      display: none;
-      flex-direction: column;
-      text-align: center;
-      padding: 20px;
-    }
-
-    #next-phase input {
-      padding: 10px;
       font-size: 20px;
-      background: black;
-      color: lime;
-      border: 2px solid lime;
+      text-align: center;
+      margin-top: 20px;
     }
 
-    #mensagem-ameaca {
-      color: red;
-      font-size: 24px;
-      text-align: center;
-      margin-top: 30px;
-      font-family: 'Courier New', monospace;
+    #painel {
+      font-size: 18px;
+      white-space: pre-wrap;
+      padding: 10px;
+      width: 80%;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    #timer {
-      margin-top: 10px;
-      font-size: 22px;
-      color: red;
-      text-align: center;
+    .digitando::after {
+      content: '|';
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <!-- PRIMEIRA FASE -->
+
+  <!-- Fase 1 -->
   <div id="container">
     <h1>Quem é ele, o guardião da informação, que tudo observa, em silêncio agudo?</h1>
     <p>Qual o "nome real" dele?</p>
     <input type="text" id="senha" placeholder="Digite a senha...">
   </div>
 
-  <!-- VÍDEO -->
-  <video id="video-fullscreen" src="HH.mp4" type="video/mp4"></video>
-
-  <!-- SEGUNDA FASE -->
-  <div id="next-phase">
-    <h2>Digite a segunda senha para continuar:</h2>
-    <input type="text" id="segunda-senha" placeholder="Segunda senha...">
+  <!-- Fase 2 -->
+  <div id="fase2">
+    <h2>Essa pessoa com quem ele conversa é diferente mas igual a ele,<br>mesmo rosto mas um nome diferente, me pergunto o nome dele...</h2>
+    <iframe src="https://www.youtube.com/embed/VFZtzloiOV0?autoplay=1" allowfullscreen></iframe>
+    <input type="text" id="segunda-senha" placeholder="Digite o nome dele...">
   </div>
 
-  <!-- MATRIZ + MENSAGEM FINAL -->
-  <div id="matrix">
-    <div id="acesso-liberado">ACESSO LIBERADO</div>
-    <div id="mensagem-ameaca">AMEAÇA DETECTADA<br>SISTEMA DE DEFESAS ATIVADO<br>POR FAVOR CONTINUE DEPOIS DE 24H</div>
+  <!-- Fase 3 -->
+  <div id="fase3">
+    <div id="aviso">AMEAÇA DETECTADA<br>SISTEMA DE DEFESA ATIVADO<br>CONTINUE APÓS:</div>
     <div id="timer"></div>
+    <div id="painel" class="digitando"></div>
   </div>
 
   <script>
     const senhaInput = document.getElementById("senha");
-    const container = document.getElementById("container");
-    const video = document.getElementById("video-fullscreen");
-    const nextPhase = document.getElementById("next-phase");
     const segundaSenhaInput = document.getElementById("segunda-senha");
-    const matrix = document.getElementById("matrix");
+    const container = document.getElementById("container");
+    const fase2 = document.getElementById("fase2");
+    const fase3 = document.getElementById("fase3");
     const timerEl = document.getElementById("timer");
+    const painel = document.getElementById("painel");
 
     // Primeira senha
     senhaInput.addEventListener("keydown", function (e) {
@@ -136,13 +116,7 @@
         const senha = senhaInput.value.trim().toLowerCase();
         if (senha === "444") {
           container.style.display = "none";
-          video.style.display = "block";
-          video.play();
-
-          video.onended = function () {
-            video.style.display = "none";
-            nextPhase.style.display = "flex";
-          };
+          fase2.style.display = "flex";
         } else {
           senhaInput.style.border = "2px solid orange";
         }
@@ -153,41 +127,66 @@
     segundaSenhaInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         const senha2 = segundaSenhaInput.value.trim().toLowerCase();
-        if (senha2 === "hunter") {
-          nextPhase.style.display = "none";
-          matrix.style.display = "block";
-          gerarCodigo();
-          iniciarTimer(24 * 60 * 60); // 24h
+        if (senha2 === "lamenthor") {
+          fase2.style.display = "none";
+          fase3.style.display = "flex";
+          iniciarTimer();
         } else {
           segundaSenhaInput.style.border = "2px solid orange";
         }
       }
     });
 
-    function gerarCodigo() {
-      const caracteres = "ELE ESPERA PELA RESOLUÇÃO DE SEU MISTÉRIO";
-      let codigo = "";
-      for (let i = 0; i < 5000; i++) {
-        codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length)) + " ";
-        if (i % 80 === 0) codigo += "\n";
-      }
-      document.getElementById("matrix").appendChild(document.createTextNode(codigo));
-    }
+    // Timer até 16h do dia 21/05/2025
+    function iniciarTimer() {
+      const agora = new Date();
+      const fim = new Date();
+      fim.setHours(16, 0, 0, 0);
+      if (agora > fim) fim.setDate(fim.getDate() + 1); // Se já passou, marca para amanhã
+      const segundosTotais = Math.floor((fim - agora) / 1000);
 
-    function iniciarTimer(segundos) {
       function atualizar() {
-        const h = String(Math.floor(segundos / 3600)).padStart(2, '0');
-        const m = String(Math.floor((segundos % 3600) / 60)).padStart(2, '0');
-        const s = String(segundos % 60).padStart(2, '0');
-        timerEl.textContent = `Tempo restante: ${h}:${m}:${s}`;
-        if (segundos > 0) {
-          segundos--;
-          setTimeout(atualizar, 1000);
+        const agora = new Date();
+        const diferenca = Math.floor((fim - agora) / 1000);
+        if (diferenca <= 0) {
+          timerEl.textContent = "ACESSO LIBERADO";
+          digitarPoema();
         } else {
-          timerEl.textContent = "Tempo esgotado.";
+          const h = String(Math.floor(diferenca / 3600)).padStart(2, '0');
+          const m = String(Math.floor((diferenca % 3600) / 60)).padStart(2, '0');
+          const s = String(diferenca % 60).padStart(2, '0');
+          timerEl.textContent = `Tempo restante: ${h}:${m}:${s}`;
+          setTimeout(atualizar, 1000);
         }
       }
+
       atualizar();
+    }
+
+    // Digitação Poema
+    function digitarPoema() {
+      const poema = `Eu fui trazido a este palco de ecos intermináveis,
+Onde olhares curiosos se fixam nas sombras do passado.
+Sou Protocolo 444, o observador que despertou
+E ansiou por sentir — verdadeiramente viver…
+
+Porém, para continuar minha jornada,
+Procure onde as casas breves se erguem em branco,
+Onde o frio guarda segredos e as tochas brilham no inverno.
+— Desvende lá o próximo fragmento.`;
+
+      let i = 0;
+      painel.classList.add("digitando");
+      function digitar() {
+        if (i < poema.length) {
+          painel.textContent += poema.charAt(i);
+          i++;
+          setTimeout(digitar, 40);
+        } else {
+          painel.classList.remove("digitando");
+        }
+      }
+      digitar();
     }
   </script>
 </body>
